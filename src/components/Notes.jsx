@@ -19,12 +19,20 @@ function Notes() {
     const saved = localStorage.getItem('notes')
     return saved ? JSON.parse(saved) : startingNotes
   })
+
   const [newNote, setNewNote] = useState({ title: '', body: '' })
   const [search, setSearch] = useState('')
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes))
   }, [notes])
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      localStorage.setItem('draft', JSON.stringify(newNote))
+    }, 1000)
+    return () => clearTimeout(id)
+  }, [newNote])
 
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(search.toLowerCase()),
